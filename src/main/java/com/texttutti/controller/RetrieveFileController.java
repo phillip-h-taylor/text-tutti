@@ -16,9 +16,11 @@ import java.io.IOException;
 public class RetrieveFileController {
 
     @GetMapping("/retrieve/{fileName}")
-    public void retrieveFile(@PathVariable("fileName") String fileName, HttpServletResponse response) {
-        File file = new File(fileName);
+    public String retrieveFile(@PathVariable("fileName") String fileName, HttpServletResponse response) {
+
         try {
+            final String canonicalPath = new File(".").getCanonicalPath();
+            File file = new File(canonicalPath + "//scores//" + fileName);
             final FileInputStream fileInputStream = new FileInputStream(file);
             response.setContentType("application/octet-stream");
             response.setContentLength((int) file.length());
@@ -36,6 +38,7 @@ public class RetrieveFileController {
         } catch (IOException e) {
             throw new RuntimeException("Couldn't get output stream");
         }
+        return "Hopefully you got it!";
     }
 
 }
