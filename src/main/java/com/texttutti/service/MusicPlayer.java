@@ -10,8 +10,8 @@ public class MusicPlayer {
     private final Player player;
 
     @Autowired
-    public MusicPlayer(Player player) {
-        this.player = player;
+    public MusicPlayer() {
+        this.player = new Player();
     }
 
     public void playSomething() {
