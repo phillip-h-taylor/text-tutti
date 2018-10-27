@@ -5,16 +5,12 @@ import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
 import jm.music.data.Score;
-import jm.util.Write;
 import org.springframework.stereotype.Component;
-
-import java.io.File;
-import java.io.IOException;
 
 @Component
 public class MusicRecorder {
 
-    public void recordSomething() {
+    public Score recordSomething() {
         final Score score = new Score("Test score");
         final Part part = new Part();
         final Phrase phrase = new Phrase("Honky Tonk", 0.0, 3);
@@ -28,15 +24,7 @@ public class MusicRecorder {
         phrase.add(new Note(76, JMC.CROTCHET));
         part.add(phrase);
         score.add(part);
-        try {
-            final String pathname = new File(".").getCanonicalPath() + "//scores//testScore2.mid";
-            File file = new File(pathname);
-            file.getParentFile().mkdirs();
-            file.createNewFile();
-            Write.midi(score, pathname);
-        } catch (IOException e) {
-            // Too bad
-        }
+        return score;
     }
 
 }
