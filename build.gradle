@@ -4,9 +4,6 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
-        maven {
-            url "https://repo.clojars.org"
-        }
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -23,10 +20,7 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
-    mavenCentral()
-    maven {
-        url "https://repo.clojars.org"
-    }
+	mavenCentral()
 }
 
 
@@ -42,7 +36,4 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-actuator")
     compile("org.springframework.boot:spring-boot-devtools")
     compile("org.apache.commons:commons-lang3:3.1")
-    compile("jfugue:jfugue:4.0.3") {
-        transitive = false
-    }
 }
