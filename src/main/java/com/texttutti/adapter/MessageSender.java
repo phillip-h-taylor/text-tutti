@@ -25,7 +25,6 @@ public class MessageSender {
     public void sendMessage(Long to, String content) {
         final String path = String.format("https://api.clockworksms.com/http/send.aspx?key=%s&from=%s&to=%s&content=%s",
                 API_KEY, FROM, to, content);
-        final ResponseEntity<String> responseEntity = restTemplate.getForEntity(path, String.class);
-        final HttpStatus statusCode = responseEntity.getStatusCode();
+        restTemplate.getForEntity(path, String.class);
     }
 }
