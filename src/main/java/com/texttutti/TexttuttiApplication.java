@@ -1,4 +1,4 @@
-package com.texttutti.texttutti;
+package com.texttutti;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
