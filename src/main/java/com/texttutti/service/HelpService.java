@@ -19,8 +19,8 @@ public class HelpService {
 //        String titleAndFileMessage = "TI and FI can be used to set the title and filename respectively. For example FImyscore will name your file myscore.mid.";
 //        String multipleMessage = "You can enter one score across multiple messages - after entering a message you have 5 minutes to enter the next message before your score gets" +
 //                " deleted. To end your score you must end your last message with \"END\".";
-        String partsMessage = "Multiple parts may be entered by ending a part with \"%26\" before starting the next one. Each part can have its own instrument and volume.";
-        String exampleMessage = "A simple example of a message would be \"I56,T45,TITitle,FIfile,C58,G58,C616%26I58,C332END\". Good luck!";
+        String partsMessage = "Multiple parts may be entered by ending a part with \"\u0026\" before starting the next one. Each part can have its own instrument and volume.";
+        String exampleMessage = "A simple example of a message would be \"I56,T45,TITitle,FIfile,C58,G58,C616\u0026I58,C332END\". Good luck!";
 //        return Arrays.asList(introMessage, noteMessage, restMessage, instrumentMessage, volumeMessage, titleAndFileMessage, multipleMessage, partsMessage, exampleMessage);
         return Arrays.asList(partsMessage, exampleMessage);
     }
