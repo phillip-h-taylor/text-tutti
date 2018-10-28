@@ -19,7 +19,7 @@ public class ReceiveController {
 
     @GetMapping(path = "/receive")
     public ResponseEntity<Void> receive(@RequestParam("id") String id, @RequestParam("from") Long from, @RequestParam("content") String content) {
-        messageService.processMessage(id, from, content);
+        messageService.processMessage(from, content);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
