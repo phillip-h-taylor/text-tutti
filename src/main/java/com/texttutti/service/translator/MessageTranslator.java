@@ -45,6 +45,9 @@ public class MessageTranslator {
                         //It's a tempo
                         final int tempo = Integer.parseInt(comp.replaceAll("T", ""));
                         score.setTempo(tempo);
+                    } else if (comp.toUpperCase().startsWith("V")){
+                        //It's a volume
+                        part.setDynamic(Integer.parseInt(comp.replaceAll("V", "")));
                     } else {
                         phrase.add(noteTranslator.translate(comp.toUpperCase()));
                     }
