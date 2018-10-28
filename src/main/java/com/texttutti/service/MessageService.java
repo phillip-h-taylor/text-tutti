@@ -4,6 +4,7 @@ import com.texttutti.adapter.MessageSender;
 import com.texttutti.service.cache.MessageCache;
 import com.texttutti.service.model.TranslationResponse;
 import com.texttutti.service.translator.MessageTranslator;
+import com.texttutti.service.translator.TranslationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,12 +34,18 @@ public class MessageService {
         }
         if (content.toUpperCase().endsWith("END")) {
             final String stringToTranslate = extendedMessage.replaceAll("END", "");
-            final TranslationResponse translationResponse = messageTranslator.translateMessage(stringToTranslate);
-            final String fileName = translationResponse.getFileName();
-            fileWriter.writeToFile(translationResponse.getScore(), fileName);
-            String downloadPath = String.format("/retrieve/%s", fileName);
-            messageSender.sendMessage(from, String.format("Score now available for download at %s", downloadPath));
-            messageCache.delete(from);
+            final TranslationResponse translationResponse;
+            try {
+                translationResponse = messageTranslator.translateMessage(stringToTranslate);
+                final String fileName = translationResponse.getFileName();
+                fileWriter.writeToFile(translationResponse.getScore(), fileName);
+                String downloadPath = String.format("/retrieve/%s", fileName);
+                messageSender.sendMessage(from, String.format("Score now available for download at %s", downloadPath));
+            } catch (TranslationException e) {
+                messageSender.sendMessage(from, "Could not convert into music, sorry! You'll have to start again.");
+            } finally {
+                messageCache.delete(from);
+            }
         } else {
             messageCache.set(from, extendedMessage);
             messageSender.sendMessage(from, "Message received, please continue");
