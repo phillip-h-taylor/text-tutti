@@ -30,8 +30,10 @@ public class MessageTranslator {
         final Phrase phrase = new Phrase();
         for (String comp : components) {
             if (comp.toUpperCase().startsWith("FI")) {
+                //It's a filename
                 fileName = comp.substring(2) + ".mid";
             } else if (comp.toUpperCase().startsWith("TI")) {
+                //It's a title
                 score.setTitle(comp.substring(2));
             } else if (comp.toUpperCase().startsWith("I")) {
                 //It's an instrument

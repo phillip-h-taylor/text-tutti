@@ -1,34 +1,47 @@
 package com.texttutti.service;
 
 import com.texttutti.adapter.MessageSender;
+import com.texttutti.service.cache.MessageCache;
 import com.texttutti.service.model.TranslationResponse;
 import com.texttutti.service.translator.MessageTranslator;
-import jm.music.data.Score;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MessageService {
 
-    private final MusicRecorder musicRecorder;
     private final MessageTranslator messageTranslator;
     private final FileWriter fileWriter;
     private final MessageSender messageSender;
+    private final MessageCache messageCache;
 
     @Autowired
-    public MessageService(MusicRecorder musicRecorder, MessageTranslator messageTranslator, FileWriter fileWriter, MessageSender messageSender) {
-        this.musicRecorder = musicRecorder;
+    public MessageService(MessageTranslator messageTranslator, FileWriter fileWriter, MessageSender messageSender, MessageCache messageCache) {
         this.messageTranslator = messageTranslator;
         this.fileWriter = fileWriter;
         this.messageSender = messageSender;
+        this.messageCache = messageCache;
     }
 
     public void processMessage(String id, Long from, String content) {
-        final TranslationResponse translationResponse = messageTranslator.translateMessage(content);
-//        final Score score = musicRecorder.recordSomething();
-        final String fileName = translationResponse.getFileName();
-        fileWriter.writeToFile(translationResponse.getScore(), fileName);
-        String downloadPath = String.format("/retrieve/%s", fileName);
-        messageSender.sendMessage(from, String.format("Score now available for download at %s", downloadPath));
+        final String cachedMessage = messageCache.get(from);
+        String extendedMessage;
+        if (cachedMessage == null) {
+            extendedMessage = content;
+        } else {
+            extendedMessage = cachedMessage + content;
+        }
+        if (content.toUpperCase().endsWith("END")) {
+            final String stringToTranslate = extendedMessage.replaceAll("END", "");
+            final TranslationResponse translationResponse = messageTranslator.translateMessage(stringToTranslate);
+            final String fileName = translationResponse.getFileName();
+            fileWriter.writeToFile(translationResponse.getScore(), fileName);
+            String downloadPath = String.format("/retrieve/%s", fileName);
+            messageSender.sendMessage(from, String.format("Score now available for download at %s", downloadPath));
+            messageCache.delete(from);
+        } else {
+            messageCache.set(from, extendedMessage);
+            messageSender.sendMessage(from, "Message received, please continue");
+        }
     }
 }
