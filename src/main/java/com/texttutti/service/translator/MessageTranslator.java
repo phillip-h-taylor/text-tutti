@@ -1,8 +1,9 @@
 package com.texttutti.service.translator;
 
+import com.texttutti.service.model.Chord;
 import com.texttutti.service.model.TranslationResponse;
+import jm.music.data.CPhrase;
 import jm.music.data.Part;
-import jm.music.data.Phrase;
 import jm.music.data.Score;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,11 +14,11 @@ import java.util.List;
 @Component
 public class MessageTranslator {
 
-    private final NoteTranslator noteTranslator;
+    private final ChordTranslator chordTranslator;
 
     @Autowired
-    public MessageTranslator(NoteTranslator noteTranslator) {
-        this.noteTranslator = noteTranslator;
+    public MessageTranslator(ChordTranslator chordTranslator) {
+        this.chordTranslator = chordTranslator;
     }
 
     public TranslationResponse translateMessage(String content) throws TranslationException {
@@ -29,7 +30,7 @@ public class MessageTranslator {
             final List<String> components = Arrays.asList(partString.split(","));
             final Part part = new Part();
             part.setChannel(channel);
-            final Phrase phrase = new Phrase();
+            final CPhrase cphrase = new CPhrase();
             for (String comp : components) {
                 try {
                     if (comp.toUpperCase().startsWith("FI")) {
@@ -49,13 +50,15 @@ public class MessageTranslator {
                         //It's a volume
                         part.setDynamic(Integer.parseInt(comp.replaceAll("V", "")));
                     } else {
-                        phrase.add(noteTranslator.translate(comp.toUpperCase()));
+                        final Chord chord = chordTranslator.translate(comp.toUpperCase());
+
+                        cphrase.addChord(chord.getPitches(), chord.getRhythmValue());
                     }
                 } catch (Exception e) {
                     throw new TranslationException(e);
                 }
             }
-            part.add(phrase);
+            part.addCPhrase(cphrase);
             score.add(part);
             channel++;
         }

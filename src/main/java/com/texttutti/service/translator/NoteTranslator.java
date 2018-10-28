@@ -26,7 +26,7 @@ public class NoteTranslator {
 
     private int getAdditionalPitchFromNote(String stringBit) {
         switch (stringBit) {
-            case "Bs": case "C":
+            case "BS": case "C":
                 return 0;
             case "CS": case "DT":
                 return 1;
