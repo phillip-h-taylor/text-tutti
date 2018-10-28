@@ -39,7 +39,7 @@ public class MessageService {
                 translationResponse = messageTranslator.translateMessage(stringToTranslate);
                 final String fileName = translationResponse.getFileName();
                 fileWriter.writeToFile(translationResponse.getScore(), fileName);
-                String downloadPath = String.format("/retrieve/%s", fileName);
+                String downloadPath = String.format("https://texttutti.herokuapp.com/retrieve/%s", fileName);
                 messageSender.sendMessage(from, String.format("Score now available for download at %s", downloadPath));
             } catch (TranslationException e) {
                 messageSender.sendMessage(from, "Could not convert into music, sorry! You'll have to start again.");
